@@ -4,6 +4,7 @@ import MyNav from "./components/MyNav";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./components/Home";
 import ArticleDetail from "./components/ArticleDetail";
+import AddArticle from "./components/AddArticle";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/article/:id" element={<ArticleDetail />} />
+          <Route path="/add-article" element={<AddArticle />} />
         </Routes>
       </div>
     </BrowserRouter>

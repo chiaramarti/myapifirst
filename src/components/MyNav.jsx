@@ -23,6 +23,9 @@ function MyNav() {
           <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: "100px" }} navbarScroll>
             <Link to="/" className="text-white">Home</Link>
           </Nav>
+          <Navbar.Text className="justify-content-end">
+              <Link to="/add-article" className="btn btn-success">Add Article</Link>
+          </Navbar.Text>
         </Navbar.Collapse>
       </Container>
     </Navbar>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { apiUrl } from "../costants";
+import { apiUrl } from "../constants";
 import Button from 'react-bootstrap/Button';
 
 const ArticleDetail = () => {

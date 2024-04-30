@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import SinglePost from './SinglePost';
 import MyPagination from './MyPagination';
-import { apiUrl } from "../costants";
+import { apiUrl } from "../constants";
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 
 const ITEMS_PER_PAGE = 3;
 
@@ -10,6 +12,8 @@ const Home = () => {
     const [activePage, setActivePage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [postIdToDelete, setPostIdToDelete] = useState(null);
 
     useEffect(() => {
         fetchData();
@@ -44,8 +48,13 @@ const Home = () => {
     };
 
     const handleDelete = async (postId) => {
+        setPostIdToDelete(postId);
+        setShowConfirmModal(true);
+    };
+
+    const confirmDelete = async () => {
         try {
-            const response = await fetch(`${apiUrl}/posts/${postId}`, {
+            const response = await fetch(`${apiUrl}/posts/${postIdToDelete}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': 'Basic ' + btoa('admin:7wd6 dZ7c 6oPc 6sxJ h1l2 zjbU'),
@@ -54,12 +63,15 @@ const Home = () => {
             });
             if (response.ok) {
                 // Rimuovi il post eliminato dall'elenco dei post
-                setPosts(posts.filter(post => post.id !== postId));
+                setPosts(posts.filter(post => post.id !== postIdToDelete));
             } else {
                 console.error('Errore durante l\'eliminazione del post:', response.statusText);
             }
         } catch (error) {
             console.error('Errore durante la richiesta di eliminazione:', error);
+        } finally {
+            setShowConfirmModal(false);
+            setPostIdToDelete(null);
         }
     };
 
@@ -83,10 +95,26 @@ const Home = () => {
                 ))}
             </div>
             <MyPagination totalPages={totalPages} activePage={activePage} onPageChange={handlePageChange} />
+            {/* Modale di conferma eliminazione */}
+            <Modal show={showConfirmModal} onHide={() => setShowConfirmModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirm Delete</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Are you sure you want to delete this post?</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowConfirmModal(false)}>
+                        Cancel
+                    </Button>
+                    <Button variant="primary" onClick={confirmDelete}>
+                        Delete
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 };
 
 export default Home;
+
 
 
