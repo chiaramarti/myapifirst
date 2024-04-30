@@ -13,7 +13,7 @@ const Home = () => {
 
     useEffect(() => {
         fetchData();
-    }, [activePage, searchTerm]); // Aggiornare i dati quando cambia la pagina attiva o il termine di ricerca
+    }, [activePage, searchTerm]); 
 
     const fetchData = async () => {
         try {
@@ -43,11 +43,30 @@ const Home = () => {
         setSearchTerm(term);
     };
 
+    const handleDelete = async (postId) => {
+        try {
+            const response = await fetch(`${apiUrl}/posts/${postId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': 'Basic ' + btoa('admin:7wd6 dZ7c 6oPc 6sxJ h1l2 zjbU'),
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (response.ok) {
+                // Rimuovi il post eliminato dall'elenco dei post
+                setPosts(posts.filter(post => post.id !== postId));
+            } else {
+                console.error('Errore durante l\'eliminazione del post:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Errore durante la richiesta di eliminazione:', error);
+        }
+    };
+
     return (
         <div className="container mt-5">
             <div className="row">
                 <div className='col-md-8 pb-1'><h1>Latest Articles</h1></div>
-            
                 {/* Barra di ricerca */}
                 <div className="col-md-4 pt-3">
                     <input
@@ -60,7 +79,7 @@ const Home = () => {
             </div>
             <div className="row">
                 {posts.map(post => (
-                    <SinglePost key={post.id} post={post} />
+                    <SinglePost key={post.id} post={post} onDelete={handleDelete} />
                 ))}
             </div>
             <MyPagination totalPages={totalPages} activePage={activePage} onPageChange={handlePageChange} />
@@ -69,4 +88,5 @@ const Home = () => {
 };
 
 export default Home;
+
 
