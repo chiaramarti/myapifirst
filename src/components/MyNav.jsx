@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
@@ -6,21 +6,6 @@ import { Link } from "react-router-dom";
 import logo from "../rollermo-high-resolution-logo-white-transparent-squared.png";
 
 function MyNav() {
-  // Stato locale per memorizzare il testo di ricerca
-  const [searchText, setSearchText] = useState("");
-
-  // Gestore di evento per aggiornare lo stato del testo di ricerca
-  const handleSearchInputChange = (event) => {
-    setSearchText(event.target.value);
-  };
-
-  // Gestore di evento per eseguire la ricerca
-  const handleSearch = () => {
-    // Implementa la logica di ricerca qui, ad esempio:
-    console.log("Testo di ricerca:", searchText);
-    // Esegue la ricerca utilizzando il testo di ricerca
-  };
-
   return (
     <Navbar expand="lg" className="bg-dark">
       <Container fluid>
