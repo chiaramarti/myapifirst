@@ -7,6 +7,11 @@
   pointer-events: none;
 }
 
+.img-wrapper {
+  height: 200px; /* Altezza fissa per tutte le immagini */
+  overflow: hidden; /* Nasconde eventuali parti dell'immagine che superano l'altezza */
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
