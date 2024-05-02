@@ -3,7 +3,7 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
 
-const SinglePost = ({ post, onDelete }) => {
+const SinglePost = ({ post, onDelete, onEdit }) => {
     const [imgSrc, setImgSrc] = useState("");
 
     useEffect(() => {
@@ -27,6 +27,10 @@ const SinglePost = ({ post, onDelete }) => {
         onDelete(post.id);
     };
 
+    const handleEdit = () => {
+        onEdit(post);
+    };
+
     return (
         <div className="col-md-4 mb-4">
             <Card className="h-100">
@@ -43,7 +47,7 @@ const SinglePost = ({ post, onDelete }) => {
                     <Card.Title>{post.title.rendered}</Card.Title>
                     <Card.Text dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }} />
                     <Link to={`/article/${post.id}`} className="btn btn-primary me-4">Read more</Link>
-                    <Button variant="warning" className="me-2">Edit</Button>
+                    <Button variant="warning" className="me-2" onClick={handleEdit}>Edit</Button>
                     <Button variant="danger" onClick={handleDelete}>Delete</Button>
                 </Card.Body>
             </Card>
@@ -52,4 +56,3 @@ const SinglePost = ({ post, onDelete }) => {
 };
 
 export default SinglePost;
-

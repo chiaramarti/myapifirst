@@ -4,6 +4,7 @@ import MyPagination from './MyPagination';
 import { apiUrl } from "../constants";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import EditPostForm from './EditPostForm';
 
 const ITEMS_PER_PAGE = 3;
 
@@ -15,9 +16,13 @@ const Home = () => {
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [postIdToDelete, setPostIdToDelete] = useState(null);
 
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [editedPost, setEditedPost] = useState(null);
+    const [error, setError] = useState(null); // Aggiungi lo stato per l'errore qui
+
     useEffect(() => {
         fetchData();
-    }, [activePage, searchTerm]); 
+    }, [activePage, searchTerm]);
 
     const fetchData = async () => {
         try {
@@ -75,6 +80,44 @@ const Home = () => {
         }
     };
 
+    const handleEdit = (post) => {
+        setEditedPost(post);
+        setShowEditModal(true);
+    };
+    
+    const handleEditSubmit = async (editedTitle, editedContent) => {
+        try {
+            const authString = "admin:7wd6 dZ7c 6oPc 6sxJ h1l2 zjbU";
+            const encodedAuthString = btoa(authString);
+
+            const response = await fetch(`${apiUrl}/posts/${editedPost.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Basic ${encodedAuthString}`, // Aggiungi l'autenticazione qui
+                },
+                body: JSON.stringify({
+                    title: editedTitle,
+                    content: editedContent,
+                }),
+            });
+    
+            if (!response.ok) {
+                throw new Error("Error updating the post");
+            }
+    
+            // Update the post list after editing
+            fetchData();
+    
+            // Close the edit modal
+            setShowEditModal(false);
+        } catch (error) {
+            console.error(error);
+            setError("Error updating the post");
+        }
+    };
+
+
     return (
         <div className="container mt-5">
             <div className="row">
@@ -91,7 +134,7 @@ const Home = () => {
             </div>
             <div className="row">
                 {posts.map(post => (
-                    <SinglePost key={post.id} post={post} onDelete={handleDelete} />
+                    <SinglePost key={post.id} post={post} onDelete={handleDelete} onEdit={handleEdit} />
                 ))}
             </div>
             <MyPagination totalPages={totalPages} activePage={activePage} onPageChange={handlePageChange} />
@@ -110,11 +153,23 @@ const Home = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
+            {/* Modale di modifica */}
+            <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Edit Post</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {editedPost && (
+                    <EditPostForm
+                        editedPost={editedPost}
+                        onSubmit={handleEditSubmit}
+                        onClose={() => setShowEditModal(false)}
+                    />
+                    )}
+                </Modal.Body>
+            </Modal>;
         </div>
     );
 };
 
 export default Home;
-
-
-
